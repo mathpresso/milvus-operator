@@ -180,7 +180,12 @@ var HasTerminatingPodByListOpts = func(ctx context.Context, cli client.Client, m
 	if err := cli.List(ctx, podList, opts); err != nil {
 		return false, err
 	}
+	// Done : add logger
+	logger := ctrl.LoggerFrom(ctx)
+	logger.Info("pod lists", "pods count", len(podList.Items))
+
 	for _, pod := range podList.Items {
+		logger.Info("pod lists", "pod info.", pod)
 		if pod.DeletionTimestamp != nil {
 			return true, nil
 		}

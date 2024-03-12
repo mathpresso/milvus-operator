@@ -120,6 +120,8 @@ func (r *MilvusReconciler) ReconcileComponentDeployment(
 	}
 
 	if IsEqual(old, cur) {
+		// Done: nothing diff
+		r.logger.Info("nothing diff context", "name", cur.Name, "namespace", cur.Namespace)
 		return nil
 	}
 
@@ -212,6 +214,8 @@ func (r *MilvusReconciler) ReconcileDeployments(ctx context.Context, mc v1beta1.
 		return err
 	}
 	for _, component := range GetComponentsBySpec(mc.Spec) {
+		// Done:
+		r.logger.Info("Reconcile Component", "name", mc.Name, "component", component.Name, "mode", mc.Spec.Mode)
 		if mc.Spec.Mode != v1beta1.MilvusModeStandalone &&
 			component == QueryNode {
 			g.Go(WarppedReconcileComponentFunc(r.qnController.Reconcile, gtx, mc, component))
