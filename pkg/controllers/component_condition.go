@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"fmt"
-
 	"github.com/milvus-io/milvus-operator/apis/milvus.io/v1beta1"
 	"github.com/milvus-io/milvus-operator/pkg/util/rest"
 	"github.com/pkg/errors"
@@ -180,12 +179,8 @@ var HasTerminatingPodByListOpts = func(ctx context.Context, cli client.Client, m
 	if err := cli.List(ctx, podList, opts); err != nil {
 		return false, err
 	}
-	// Done : add logger
-	logger := ctrl.LoggerFrom(ctx)
-	logger.Info("pod lists", "pods count", len(podList.Items))
 
 	for _, pod := range podList.Items {
-		logger.Info("pod lists", "pod info.", pod)
 		if pod.DeletionTimestamp != nil {
 			return true, nil
 		}
