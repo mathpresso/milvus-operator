@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"context"
+	"fmt"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"time"
 
 	"github.com/milvus-io/milvus-operator/apis/milvus.io/v1beta1"
@@ -69,6 +72,12 @@ func updatePodTemplate(
 	appLabels map[string]string,
 	isCreating bool,
 ) {
+	//Done: updatePodTemplate
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	logger := ctrl.LoggerFrom(ctx)
+
 	currentTemplate := template.DeepCopy()
 
 	updatePodMeta(template, appLabels, updater)
@@ -77,10 +86,12 @@ func updatePodTemplate(
 	updateScheduleSpec(template, updater)
 	updateMilvusContainer(template, updater, isCreating)
 	updateSidecars(template, updater)
+	logger.Info("updatePodTemplate", "IsEqual template", IsEqual(currentTemplate, template), "image", updater.GetMergedComponentSpec().Image, "name", updater.GetMilvus().Name)
 	// no rolling update
 	if IsEqual(currentTemplate, template) {
 		return
 	}
+
 	// some defaults change will cause rolling update, so we only perform when rolling update
 	updateSomeFieldsOnlyWhenRolling(template, updater)
 }
@@ -170,6 +181,12 @@ func updateVolumes(template *corev1.PodTemplateSpec, updater deploymentUpdater) 
 }
 
 func updateMilvusContainer(template *corev1.PodTemplateSpec, updater deploymentUpdater, isCreating bool) {
+	//Done: updateMilvusContainer
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	logger := ctrl.LoggerFrom(ctx)
+
 	mergedComSpec := updater.GetMergedComponentSpec()
 
 	containerIdx := GetContainerIndex(template.Spec.Containers, updater.GetComponentName())
@@ -229,6 +246,9 @@ func updateMilvusContainer(template *corev1.PodTemplateSpec, updater deploymentU
 		!updater.GetMilvus().IsRollingUpdateEnabled() || // rolling update is disabled
 		updater.GetMilvus().Spec.Com.ImageUpdateMode == v1beta1.ImageUpdateModeAll || // image update mode is update all
 		updater.RollingUpdateImageDependencyReady() {
+		//Done: updateMilvusContainer
+		logger.Info("updateMilvusContainer", "container.Image", container.Image, "mergedComSpec.Image", mergedComSpec.Image)
+
 		container.Image = mergedComSpec.Image
 	}
 
@@ -382,7 +402,14 @@ func (m milvusDeploymentUpdater) RollingUpdateImageDependencyReady() bool {
 		return false
 	}
 	deps := m.component.GetDependencies(m.Spec)
+	//Done: RollingUpdateImageDependencyReady
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	logger := ctrl.LoggerFrom(ctx)
+
 	for _, dep := range deps {
+		logger.Info("RollingUpdateImageDependencyReady", "dep", fmt.Sprintf("%s:%s", dep.Name, dep.FieldName))
 		if !dep.IsImageUpdated(m.GetMilvus()) {
 			return false
 		}

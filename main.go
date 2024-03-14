@@ -103,6 +103,8 @@ func main() {
 
 	controllers.InitializeMetrics()
 
+	// Done: setup controllers
+	setupLog.Info("setting up controllers", "mgr", mgr)
 	if err := controllers.SetupControllers(ctx, mgr, strings.Split(stopReconcilers, ","), true); err != nil {
 		setupLog.Error(err, "unable to setup controller with manager")
 		os.Exit(1)

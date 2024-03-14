@@ -79,6 +79,7 @@ func (r *MilvusReconciler) updateDeployment(
 		return errors.Wrap(err, "check component has terminating pod")
 	}
 	if hasTerminatingPod {
+		r.logger.Info("[MilvusReconciler.updateDeployment] component has terminating pod, skip update template", "component", component.Name)
 		return updateDeploymentWithoutPodTemplate(deployment, updater)
 	}
 
@@ -122,8 +123,7 @@ func (r *MilvusReconciler) ReconcileComponentDeployment(
 	if IsEqual(old, cur) {
 		// Done: nothing diff
 		r.logger.Info("nothing diff context", "name", cur.Name, "namespace", cur.Namespace)
-		r.logger.Info("old spec", "spec", old)
-		r.logger.Info("cur spec", "spec", cur)
+
 		return nil
 	}
 
