@@ -247,7 +247,7 @@ func updateMilvusContainer(template *corev1.PodTemplateSpec, updater deploymentU
 		updater.GetMilvus().Spec.Com.ImageUpdateMode == v1beta1.ImageUpdateModeAll || // image update mode is update all
 		updater.RollingUpdateImageDependencyReady() {
 		//Done: updateMilvusContainer
-		logger.Info("updateMilvusContainer", "container.Image", container.Image, "mergedComSpec.Image", mergedComSpec.Image)
+		logger.Info("updateMilvusContainer", "container.Image", container.Image, "mergedComSpec.Image", mergedComSpec.Image, "name", updater.GetComponentName())
 
 		container.Image = mergedComSpec.Image
 	}

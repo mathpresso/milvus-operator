@@ -386,7 +386,7 @@ func (c MilvusComponent) IsImageUpdated(m *v1beta1.Milvus) bool {
 	defer cancel()
 
 	logger := ctrl.LoggerFrom(ctx)
-	logger.Info("IsImageUpdated", "ComponentsDeployStatus", m.Status.ComponentsDeployStatus, "name", c.GetName())
+	logger.Info("IsImageUpdated", "ComponentsDeployStatus", len(m.Status.ComponentsDeployStatus), "name", c.GetName())
 
 	if m.Status.ComponentsDeployStatus == nil {
 		return false
