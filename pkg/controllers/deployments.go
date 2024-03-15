@@ -116,6 +116,7 @@ func (r *MilvusReconciler) ReconcileComponentDeployment(
 	}
 
 	cur := old.DeepCopy()
+	r.logger.Info("Start Update Deployment", "name", cur.Name)
 	if err := r.updateDeployment(ctx, mc, cur, component); err != nil {
 		return err
 	}

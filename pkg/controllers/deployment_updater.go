@@ -86,7 +86,7 @@ func updatePodTemplate(
 	updateScheduleSpec(template, updater)
 	updateMilvusContainer(template, updater, isCreating)
 	updateSidecars(template, updater)
-	logger.Info("updatePodTemplate", "IsEqual template", IsEqual(currentTemplate, template), "image", updater.GetMergedComponentSpec().Image, "name", updater.GetMilvus().Name)
+	logger.Info("updatePodTemplate", "IsEqual template", IsEqual(currentTemplate, template), "image", updater.GetMergedComponentSpec().Image, "name", updater.GetComponentName())
 	// no rolling update
 	if IsEqual(currentTemplate, template) {
 		return
