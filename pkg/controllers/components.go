@@ -374,6 +374,14 @@ func (c MilvusComponent) GetDependencies(spec v1beta1.MilvusSpec) []MilvusCompon
 	if isMixCoord {
 		depGraph = mixCoordClusterDependencyGraph
 	}
+
+	//Done:
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	logger := ctrl.LoggerFrom(ctx)
+	logger.Info("GetDependencies", "depGraph", depGraph.GetDependencies(c), "component", c)
+
 	if isDowngrade {
 		return depGraph.GetReversedDependencies(c)
 	}
@@ -382,6 +390,7 @@ func (c MilvusComponent) GetDependencies(spec v1beta1.MilvusSpec) []MilvusCompon
 
 // IsImageUpdated returns whether the image of the component is updated
 func (c MilvusComponent) IsImageUpdated(m *v1beta1.Milvus) bool {
+	//Done:
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
