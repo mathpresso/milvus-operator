@@ -92,6 +92,7 @@ func updatePodTemplate(
 		return
 	}
 
+	logger.Info("updatePodTemplate", "updateSomeFieldsOnlyWhenRolling", "Exec", "name", updater.GetComponentName())
 	// some defaults change will cause rolling update, so we only perform when rolling update
 	updateSomeFieldsOnlyWhenRolling(template, updater)
 }
