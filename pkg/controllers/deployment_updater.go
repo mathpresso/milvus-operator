@@ -243,6 +243,7 @@ func updateMilvusContainer(template *corev1.PodTemplateSpec, updater deploymentU
 	}
 
 	container.ImagePullPolicy = *mergedComSpec.ImagePullPolicy
+	logger.Info("updateMilvusContainer", "isCreating", isCreating, "updater.GetMilvus().IsRollingUpdateEnabled()", updater.GetMilvus().IsRollingUpdateEnabled(), "updater.GetMilvus().Spec.Com.ImageUpdateMode", updater.GetMilvus().Spec.Com.ImageUpdateMode)
 	if isCreating ||
 		!updater.GetMilvus().IsRollingUpdateEnabled() || // rolling update is disabled
 		updater.GetMilvus().Spec.Com.ImageUpdateMode == v1beta1.ImageUpdateModeAll || // image update mode is update all
@@ -408,6 +409,7 @@ func (m milvusDeploymentUpdater) RollingUpdateImageDependencyReady() bool {
 	defer cancel()
 
 	logger := ctrl.LoggerFrom(ctx)
+	logger.Info("RollingUpdateImageDependencyReady", "dep count", len(deps), "component", m.component)
 
 	for _, dep := range deps {
 		logger.Info("RollingUpdateImageDependencyReady", "dep", fmt.Sprintf("%s:%s", dep.Name, dep.FieldName))
