@@ -412,7 +412,7 @@ func (m milvusDeploymentUpdater) RollingUpdateImageDependencyReady() bool {
 	logger.Info("RollingUpdateImageDependencyReady", "dep count", len(deps), "component", m.component)
 
 	for _, dep := range deps {
-		logger.Info("RollingUpdateImageDependencyReady", "dep", fmt.Sprintf("%s:%s", dep.Name, dep.FieldName))
+		logger.Info("RollingUpdateImageDependencyReady", "dep", fmt.Sprintf("%s:%s", dep.Name, dep.FieldName), "component", m.component)
 		if !dep.IsImageUpdated(m.GetMilvus()) {
 			return false
 		}
