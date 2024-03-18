@@ -217,6 +217,7 @@ func (r *MilvusReconciler) ReconcileDeployments(ctx context.Context, mc v1beta1.
 		return err
 	}
 	for _, component := range GetComponentsBySpec(mc.Spec) {
+		component := component
 		// Done:
 		r.logger.Info("Reconcile Component", "name", mc.Name, "component", component.Name, "mode", mc.Spec.Mode)
 		if mc.Spec.Mode != v1beta1.MilvusModeStandalone &&
