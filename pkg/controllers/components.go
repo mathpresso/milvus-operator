@@ -389,24 +389,24 @@ func (c MilvusComponent) GetDependencies(spec v1beta1.MilvusSpec) []MilvusCompon
 }
 
 // IsImageUpdated returns whether the image of the component is updated
-func (c MilvusComponent) IsImageUpdated(m *v1beta1.Milvus) bool {
+func (c MilvusComponent) IsImageUpdated(m *v1beta1.Milvus, mc MilvusComponent) bool {
 	//Done:
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	logger := ctrl.LoggerFrom(ctx)
-	logger.Info("IsImageUpdated", "ComponentsDeployStatus", len(m.Status.ComponentsDeployStatus), "name", c.GetName(), "component", m.Status.Endpoint, "component", m.Spec)
+	logger.Info("IsImageUpdated", "ComponentsDeployStatus", len(m.Status.ComponentsDeployStatus), "name", c.GetName(), "component", mc.Name)
 
 	if m.Status.ComponentsDeployStatus == nil {
 		return false
 	}
 	deployStatus := m.Status.ComponentsDeployStatus[c.GetName()]
-	logger.Info("IsImageUpdated", "m.Spec.Com.Image", m.Spec.Com.Image, "deployStatus.Image", deployStatus.Image, "name", c.GetName(), "component", m.Status.Endpoint, "component", m.Spec)
+	logger.Info("IsImageUpdated", "m.Spec.Com.Image", m.Spec.Com.Image, "deployStatus.Image", deployStatus.Image, "name", c.GetName(), "component", mc.Name)
 	if m.Spec.Com.Image != deployStatus.Image {
 		return false
 	}
 
-	logger.Info("IsImageUpdated", "deployStatus.GetState()", deployStatus.GetState(), "name", c.GetName(), "component", m.Status.Endpoint, "component", m.Spec)
+	logger.Info("IsImageUpdated", "deployStatus.GetState()", deployStatus.GetState(), "name", c.GetName(), "component", m.Status.Endpoint, "component", mc.Name)
 	if deployStatus.GetState() != v1beta1.DeploymentComplete {
 		return false
 	}
