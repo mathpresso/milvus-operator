@@ -400,15 +400,16 @@ func (m milvusDeploymentUpdater) GetMilvus() *v1beta1.Milvus {
 }
 
 func (m milvusDeploymentUpdater) RollingUpdateImageDependencyReady() bool {
-	if m.Milvus.Status.ObservedGeneration < m.Milvus.Generation {
-		return false
-	}
-	deps := m.component.GetDependencies(m.Spec)
 	//Done: RollingUpdateImageDependencyReady
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	logger := ctrl.LoggerFrom(ctx)
+	if m.Milvus.Status.ObservedGeneration < m.Milvus.Generation {
+		logger.Info("RollingUpdateImageDependencyReady", "m.Milvus.Status.ObservedGeneration", m.Milvus.Status.ObservedGeneration, "m.Milvus.Generation", m.Milvus.Generation, "component", m.component)
+		return false
+	}
+	deps := m.component.GetDependencies(m.Spec)
 	logger.Info("RollingUpdateImageDependencyReady", "dep count", len(deps), "component", m.component)
 
 	for _, dep := range deps {
